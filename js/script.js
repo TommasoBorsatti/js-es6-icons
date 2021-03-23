@@ -146,15 +146,53 @@ Icons.forEach((icon, index) => {
 // Provo il processo per associazione; definisco un array di elementi in cui associo categoria a colore.
 
 const Colors = [
-
-  { category: food,
-    color: #ff008d
+  { category: "food",
+    color: "red"
   },
-  { category: food,
-    color: 	#d14eea
+  { category: "beverage",
+    color: 	"violet"
   },
-  { category: food,
-    color: #f96363
+  { category: "animals",
+    color: "purple"
   },
-
 ];
+
+//Assegno le categorie e i colori di Colors a delle variabili per utilizzo futuro:
+
+//???????????????????
+
+
+// Uso Map per creare un nuovo array di icone colorate a partire da Icons; lo chiamo ColorIcons:
+
+const ColorIcons = Icons.map((icon, index) => {
+
+  // I colori gli assegno con un if / else if / else in attesa di ricordarmi il metodo più corretto.
+
+  if (icon.category == "food") {
+    icon.color = "#ff008d";
+  } else if (icon.category == "beverage") {
+    icon.color = "#d14eea"
+  } else {
+    icon.color = "#f96363"
+  }
+  return icon;
+});
+
+// Cancello l'html incollato a Target; questo mi servirà dopo, per la modularità dovuta alle options della select:
+
+Target.html("");
+
+// uso Append per sostituire le ColorIcons alle Icons;
+
+ColorIcons.forEach((icon, index) => {
+
+  //scrivo l html da inserire con destrutturazione e literal template:
+
+  const Html =
+  `<div>
+    <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
+    <div class="title">${icon.name}</div>
+  </div>`
+
+  Target.append(Html);
+});
