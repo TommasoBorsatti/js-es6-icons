@@ -219,3 +219,12 @@ Categories.forEach((option) => {
 
   $("#type").append(Html);
 });
+
+// Inizializzo l'evento al Change della select; non posso usare un Arrow Function per via del fatto che mi assocerebbe This al Document:
+
+$("#type").change( function() {
+  console.log($(this).val());
+
+  // ora devo associare il Filter alla scelta della Categoria
+
+});
