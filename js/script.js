@@ -225,6 +225,53 @@ Categories.forEach((option) => {
 $("#type").change( function() {
   console.log($(this).val());
 
-  // ora devo associare il Filter alla scelta della Categoria
+  // cancello l'Html usando il solito comando:
+
+    Target.html("");
+
+  // Prima devo necessariamente aggiungere una condizione IF che alla scelta di All, rimetta tutta l'icone dentro;
+  if ($(this).val() == "") {
+
+    ColorIcons.forEach((icon) => {
+
+      //scrivo l html da inserire con destrutturazione e literal template:
+
+      const Html =
+      `<div>
+        <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
+        <div class="title">${icon.name}</div>
+      </div>`
+
+      Target.append(Html);
+    });
+
+
+  } else {
+
+    // ora devo associare il Filter alla scelta della Categoria; per prima cosa inizializzo variabile SelectedIcons e vado a usare Filter su ColorIcons.
+
+    const SelectedIcons = ColorIcons.filter((icon) => {
+      return icon.category == $(this).val();
+    });
+
+    // Ora eseguo lo stesso comando di prima ciclando su SelectedIcons invece che ColorIcons. Dopo sostituirò tutto con una funzione!
+
+    SelectedIcons.forEach((icon) => {
+
+      //scrivo l html da inserire con destrutturazione e literal template:
+
+      const Html =
+      `<div>
+        <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
+        <div class="title">${icon.name}</div>
+      </div>`
+
+      // Ora Sostituisco le vecchie icone con quelle Selezionate:
+
+      Target.append(Html);
+
+    });
+
+  }
 
 });
