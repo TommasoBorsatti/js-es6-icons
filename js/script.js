@@ -1,6 +1,38 @@
 
 // FUNZIONI & RISORSE DI PARTENZA
 
+// 1)- Funzione
+// Qui vado a definire una funzione con cui poi andrò ogni volta a scrivere e iniettare l'html che rappresenta le mie icone.
+// Provo a definirla come funzione a 2 argomenti/parametri: l'array da ciclare con il foreach, e il target su cui iniettare l html con append.
+
+function iconizer(array,target) {
+
+  return array.forEach((icon) => {
+
+    //destrutturo!
+    const {name, family, prefix, category} = array;
+
+    //scrivo l html da inserire con destrutturazione e literal template:
+
+    const Html =
+    `<div>
+      <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
+      <div class="title">${icon.name}</div>
+    </div>`
+
+    target.append(Html);
+  });
+
+};
+
+// 2)- Funzione
+// Mi invento una funzione Cancel per cancellare l'Html: ho visto che è un procedimento che ripeto spesso a ogni scelta:
+
+function cancel(target) {
+  target.html("");
+}
+
+//Questo è l'Array Icons di partenza.
 const Icons = [
   {
     name: 'apple-alt',
@@ -115,6 +147,7 @@ const Icons = [
 //------------------------------------------------------------------------------
 // Milestone 1
 // Partendo dalla seguente struttura dati , mostriamo in pagina tutte le icone disponibili come da layout.
+//------------------------------------------------------------------------------
 
 // definisco il target dove andare a iniettare l html:
 const Target = $(".icons");
@@ -122,7 +155,9 @@ const Target = $(".icons");
 // destrutturo:
 const {name, family, prefix, category} = Icons;
 
-// uso for each come un ciclo for per ciclare Icons e iniettare tutte le icone nel target:
+/* VECCHIO METODO
+
+uso for each come un ciclo for per ciclare Icons e iniettare tutte le icone nel target:
 
 Icons.forEach((icon) => {
 
@@ -136,6 +171,11 @@ Icons.forEach((icon) => {
 
   Target.append(Html);
 });
+*/
+
+// TUTTO QUELLO CHE HO SCRITTO PRIMA PU0' ESSERE RIASSUNTO NELLA FUNZIONE FATTA AD HOC:
+
+iconizer(Icons, Target);
 
 //------------------------------------------------------------------------------
 // Milestone 2
@@ -165,7 +205,6 @@ const Colors = [
 const ColorIcons = Icons.map((icon) => {
 
   // I colori gli assegno con un if / else if / else in attesa di ricordarmi il metodo più corretto.
-
   if (icon.category == "Food") {
     icon.color = "#ff008d";
   } else if (icon.category == "Beverage") {
@@ -176,11 +215,12 @@ const ColorIcons = Icons.map((icon) => {
   return icon;
 });
 
-// Cancello l'html incollato a Target; questo mi servirà dopo, per la modularità dovuta alle options della select:
+// Cancello l'html incollato a Target; questo mi servirà dopo, per la modularità dovuta alle options della select. Uso la funzione Cancel:
 
-Target.html("");
+cancel(Target);
 
-// uso Append per sostituire le ColorIcons alle Icons;
+/* METODO SENZA FUNZIONE
+uso Append per sostituire le ColorIcons alle Icons;
 
 ColorIcons.forEach((icon) => {
 
@@ -194,13 +234,17 @@ ColorIcons.forEach((icon) => {
 
   Target.append(Html);
 });
+*/
+
+// USO DI NUOVO LA FUNZIONE ICONIZER PER EVITARE DI RISCRIVERE TUTTO:
+
+iconizer(ColorIcons, Target);
 
 //------------------------------------------------------------------------------
 // Milestone 3
 // Creiamo una select con i tipi di icone e usiamola per filtrare le icone
 
 //Con for each e includes individuo tutte le categorie di ColorIcons e le inserisco in un Array Categories.
-
 const Categories =[];
 
 ColorIcons.forEach((icon) => {
@@ -210,67 +254,36 @@ ColorIcons.forEach((icon) => {
 });
 
 // Con for each ciclo tutto l'array Categories e scrivo un Html per ciascuna option della select, posizionandolo infine con append.
-
 Categories.forEach((option) => {
 
   // Con Template Literal creo l'HTML per le option da aggiungere alla select:
-
   const Html = `<option value="${option}">${option}</option>`;
 
   $("#type").append(Html);
 });
 
 // Inizializzo l'evento al Change della select; non posso usare un Arrow Function per via del fatto che mi assocerebbe This al Document:
-
 $("#type").change( function() {
   console.log($(this).val());
 
-  // cancello l'Html usando il solito comando:
+  // cancello l'Html usando Cancel:
+    cancel(Target);
 
-    Target.html("");
-
-  // Prima devo necessariamente aggiungere una condizione IF che alla scelta di All, rimetta tutta l'icone dentro;
+  // Prima devo necessariamente aggiungere una condizione IF che alla scelta di All, rimetta tutta l'icone dentro; Uso la funzione Iconizer.
   if ($(this).val() == "") {
 
-    ColorIcons.forEach((icon) => {
-
-      //scrivo l html da inserire con destrutturazione e literal template:
-
-      const Html =
-      `<div>
-        <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
-        <div class="title">${icon.name}</div>
-      </div>`
-
-      Target.append(Html);
-    });
-
+    iconizer(ColorIcons, Target);
 
   } else {
 
     // ora devo associare il Filter alla scelta della Categoria; per prima cosa inizializzo variabile SelectedIcons e vado a usare Filter su ColorIcons.
-
     const SelectedIcons = ColorIcons.filter((icon) => {
       return icon.category == $(this).val();
     });
 
-    // Ora eseguo lo stesso comando di prima ciclando su SelectedIcons invece che ColorIcons. Dopo sostituirò tutto con una funzione!
+    // Ora eseguo lo stesso comando di prima ciclando su SelectedIcons invece che ColorIcons. Uso Iconizer per fare ovviamente prima.
 
-    SelectedIcons.forEach((icon) => {
-
-      //scrivo l html da inserire con destrutturazione e literal template:
-
-      const Html =
-      `<div>
-        <i style="color:${icon.color};" class="${icon.family} ${icon.prefix}${icon.name}"></i>
-        <div class="title">${icon.name}</div>
-      </div>`
-
-      // Ora Sostituisco le vecchie icone con quelle Selezionate:
-
-      Target.append(Html);
-
-    });
+    iconizer(SelectedIcons, Target);
 
   }
 
