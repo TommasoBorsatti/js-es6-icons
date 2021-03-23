@@ -9,9 +9,6 @@ function iconizer(array,target) {
 
   return array.forEach((icon) => {
 
-    //destrutturo!
-    const {name, family, prefix, category} = array;
-
     //scrivo l html da inserire con destrutturazione e literal template:
 
     const Html =
@@ -152,10 +149,7 @@ const Icons = [
 // definisco il target dove andare a iniettare l html:
 const Target = $(".icons");
 
-// destrutturo:
-const {name, family, prefix, category} = Icons;
-
-/* VECCHIO METODO
+/* METODO SENZA FUNZIONE
 
 uso for each come un ciclo for per ciclare Icons e iniettare tutte le icone nel target:
 
@@ -180,27 +174,10 @@ iconizer(Icons, Target);
 //------------------------------------------------------------------------------
 // Milestone 2
 // Coloriamo le icone per tipo
+//------------------------------------------------------------------------------
 
-// Provo il processo per associazione; definisco un array di elementi in cui associo categoria a colore.
-
-const Colors = [
-  { category: "Food",
-    color: "red"
-  },
-  { category: "Beverage",
-    color: 	"violet"
-  },
-  { category: "Animals",
-    color: "purple"
-  },
-];
-
-//Assegno le categorie e i colori di Colors a delle variabili per utilizzo futuro:
-
-//???????????????????
-
-
-// Uso Map per creare un nuovo array di icone colorate a partire da Icons; lo chiamo ColorIcons:
+/*//METODO ES5 (Avevo usato questo sistema prima di riguardare il video)
+//Uso Map per creare un nuovo array di icone colorate a partire da Icons; lo chiamo ColorIcons:
 
 const ColorIcons = Icons.map((icon) => {
 
@@ -212,6 +189,32 @@ const ColorIcons = Icons.map((icon) => {
   } else {
     icon.color = "#f96363"
   }
+  return icon;
+});
+*/
+
+// METODO ES6 (Rifatto guardando la video-registrazione)
+
+//Con for each e includes individuo tutte le categorie di ColorIcons e le inserisco in un Array Categories.
+const Categories =[];
+
+Icons.forEach((icon) => {
+ if (!Categories.includes(icon.category)) {
+   Categories.push(icon.category);
+ }
+});
+
+// Allo stesso modo scrivo un Array Colors per andare a lavorare sulle corrispondenze degli indici:
+const Colors = ["#ff008d", "#d14eea", "#f96363" ];
+
+// Uso Map per creare un nuovo Array di icone colorate a partire da Icons; lo chiamo ColorIcons:
+const ColorIcons = Icons.map((icon) => {
+
+  // I colori gli assegno lavorando sulle corrispondenze indici dei 2 array con ES6:
+  const CatIndex = Categories.indexOf(icon.category);
+  const ColorItem = Colors[CatIndex];
+  icon.color = ColorItem;
+
   return icon;
 });
 
@@ -243,15 +246,8 @@ iconizer(ColorIcons, Target);
 //------------------------------------------------------------------------------
 // Milestone 3
 // Creiamo una select con i tipi di icone e usiamola per filtrare le icone
+//------------------------------------------------------------------------------
 
-//Con for each e includes individuo tutte le categorie di ColorIcons e le inserisco in un Array Categories.
-const Categories =[];
-
-ColorIcons.forEach((icon) => {
- if (!Categories.includes(icon.category)) {
-   Categories.push(icon.category);
- }
-});
 
 // Con for each ciclo tutto l'array Categories e scrivo un Html per ciascuna option della select, posizionandolo infine con append.
 Categories.forEach((option) => {
